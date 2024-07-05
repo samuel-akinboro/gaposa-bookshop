@@ -9,7 +9,7 @@ const Users = () => {
     const fetchUsers = async () => {
       const usersCollection = collection(db, 'users');
       const userSnapshot = await getDocs(usersCollection);
-      const userList = userSnapshot.docs.map(doc => ({
+      const userList = userSnapshot.docs?.filter(doc => doc?.data()?.role !== 'admin').map(doc => ({
         id: doc.id,
         ...doc.data(),
       }));
@@ -20,11 +20,11 @@ const Users = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="max-w-4xl w-full p-8 bg-white shadow-lg rounded-lg">
+    <div className="flex justify-center min-h-[70vh] mt-10">
+      <div className="w-[90%] p-8 bg-white border rounded-lg overflow-x-auto">
         <h2 className="text-2xl font-semibold mb-6 text-center">Users</h2>
         {users.length > 0 ? (
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-gray-200 border">
             <thead>
               <tr>
                 <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
