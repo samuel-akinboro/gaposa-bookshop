@@ -4,8 +4,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import { useBookshop } from '../store/BookshopContext';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import { ClipLoader } from 'react-spinners';
 
 const Login = () => {
@@ -96,7 +95,6 @@ const Login = () => {
             {loading ? <ClipLoader size={20} color={"#ffffff"} /> : 'Login'}
           </button>
         </form>
-        <ToastContainer />
       </div>
     </div>
   );

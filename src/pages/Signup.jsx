@@ -4,9 +4,9 @@ import { setDoc, doc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import { useBookshop } from '../store/BookshopContext';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import { ClipLoader } from 'react-spinners';
+import departments from '../data/departments.json';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -53,6 +53,7 @@ const Signup = () => {
         department,
         level,
         createdAt: new Date(),
+        role: 'user'
       };
 
       await setDoc(doc(db, 'users', user.uid), userData);
@@ -119,7 +120,9 @@ const Signup = () => {
             />
           </div>
           <div>
-            <label htmlFor="department" className="block text-sm font-medium text-gray-700">Department</label>
+            <label htmlFor="department" className="block text-sm font-medium text-gray-700">
+              Department
+            </label>
             <select
               id="department"
               name="department"
@@ -129,10 +132,11 @@ const Signup = () => {
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             >
               <option value="">Select Department</option>
-              <option value="Computer Science">Computer Science</option>
-              <option value="Computer Engineering">Computer Engineering</option>
-              <option value="Business Administration">Business Administration</option>
-              {/* Add more department options as needed */}
+              {departments.map((dept, index) => (
+                <option key={index} value={dept}>
+                  {dept}
+                </option>
+              ))}
             </select>
           </div>
           <div>
@@ -203,7 +207,6 @@ const Signup = () => {
             {loading ? <ClipLoader size={20} color={"#ffffff"} /> : 'Sign Up'}
           </button>
         </form>
-        <ToastContainer />
       </div>
     </div>
   );

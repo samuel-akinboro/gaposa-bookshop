@@ -1,3 +1,4 @@
+// App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -13,11 +14,17 @@ import Orders from './pages/Orders';
 import Users from './pages/Users';
 import { BookshopProvider } from './store/BookshopContext';
 import Landing from './pages/Landing';
+import AdminRoute from './components/AdminRoute';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import AdminBooks from './pages/AdminBooks';
+import EditBook from './pages/EditBook';
 
 const App = () => {
   return (
     <BookshopProvider>
       <Router>
+        <ToastContainer />
         <div className="flex flex-col min-h-screen">
           <Navbar />
           <main className="flex-grow">
@@ -28,9 +35,11 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/book/:id" element={<BookDetails />} />
-              <Route path="/admin/add-book" element={<AddBook />} />
-              <Route path="/admin/orders" element={<Orders />} />
-              <Route path="/admin/users" element={<Users />} />
+              <Route path="/admin/add-book" element={<AdminRoute><AddBook /></AdminRoute>} />
+              <Route path="/admin/orders" element={<AdminRoute><Orders /></AdminRoute>} />
+              <Route path="/admin/users" element={<AdminRoute><Users /></AdminRoute>} />
+              <Route path="/admin/books" element={<AdminRoute><AdminBooks /></AdminRoute>} />
+              <Route path="/admin/edit-book/:id" element={<AdminRoute><EditBook /></AdminRoute>} />
             </Routes>
           </main>
           <Footer />
