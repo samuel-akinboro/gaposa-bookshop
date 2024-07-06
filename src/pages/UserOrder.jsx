@@ -1,8 +1,7 @@
-// UserOrder.jsx
 import React, { useEffect, useState } from 'react';
 import { useBookshop } from '../store/BookshopContext';
 import { db } from '../firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import OrderItem from '../components/OrderItem'; // Assuming you have an OrderItem component
 
 const UserOrder = () => {
@@ -16,7 +15,11 @@ const UserOrder = () => {
     const fetchOrders = async () => {
       try {
         const ordersRef = collection(db, 'orders');
-        const q = query(ordersRef, where('userId', '==', user.uid)); // Replace with your user identifier
+        const q = query(
+          ordersRef,
+          where('userId', '==', user.uid), // Replace with your user identifier
+          orderBy('timestamp', 'desc') // Sort by timestamp in descending order
+        );
         const querySnapshot = await getDocs(q);
         const fetchedOrders = querySnapshot.docs.map((doc) => ({
           id: doc.id,
