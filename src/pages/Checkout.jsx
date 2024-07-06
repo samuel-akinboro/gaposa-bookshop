@@ -43,7 +43,7 @@ const Checkout = () => {
       for (const item of cart) {
         const bookRef = doc(db, 'books', item.id);
         await updateDoc(bookRef, {
-          copies: item.copies - item.quantity,
+          copies: item.copies - item.quantity ,
         });
       }
 
@@ -71,6 +71,7 @@ const Checkout = () => {
       shippingInfo: { ...shippingInfo },
       paymentMethod,
       items: cart.map(item => ({
+        bookId: item?.id,
         title: item.title,
         price: item.price,
         quantity: item.quantity,

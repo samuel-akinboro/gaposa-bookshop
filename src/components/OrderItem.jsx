@@ -32,7 +32,9 @@ const OrderItem = ({ order }) => {
         <p className="text-lg font-semibold">Total:</p>
         <p className="text-lg font-semibold">₦{totalAmount.toFixed(2)}</p>
       </div>
-      <p className="mt-2">Status: {status}</p>
+      {status === 'Book Given Out' && <p className="mt-2 text-green-700 bg-green-100 w-fit p-2">Status: Book recieved</p>}
+      {status === 'Refunded' && <p className="mt-2 text-red-700 bg-red-100 w-fit p-2">Status: Refunded</p>}
+      {!status && <p className="mt-2 text-yellow-700 bg-yellow-100 w-fit p-2">Status: Pending</p>}
     </div>
   );
 };

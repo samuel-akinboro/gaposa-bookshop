@@ -57,6 +57,8 @@ const AdminBooks = () => {
               <h2 className="text-xl font-semibold">{book.title}</h2>
               <p>{book.author}</p>
               <p>{book.price}</p>
+              <p>Copies: {book.copies}</p>
+              <p className={`${book?.copies === 0 ? 'text-red-500' : 'text-green-500'}`}>{book.copies === 0 ? 'Out of Stock' : 'Available'}</p> {/* Indicator for out of stock */}
               <div className="mt-4 flex justify-between">
                 <button
                   onClick={() => handleDelete(book.id)}

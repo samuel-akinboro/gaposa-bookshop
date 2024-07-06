@@ -49,9 +49,9 @@ const OrderManagement = () => {
               {orders.map((order) => (
                 <tr key={order.id}>
                   <td className="border border-gray-200 px-4 py-2">{order.id}</td>
-                  <td className="border border-gray-200 px-4 py-2">{order.customerName}</td>
+                  <td className="border border-gray-200 px-4 py-2">{order.customerName ?? 'John doe'}</td>
                   <td className="border border-gray-200 px-4 py-2">₦{order.totalAmount.toFixed(2)}</td>
-                  <td className="border border-gray-200 px-4 py-2">{order.status}</td>
+                  <td className="border border-gray-200 px-4 py-2">{order.status ?? 'pending'}</td>
                   <td className="border border-gray-200 px-4 py-2">
                     <Link
                       to={`/admin/orders/${order.id}`}

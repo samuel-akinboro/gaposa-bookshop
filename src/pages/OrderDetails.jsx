@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../firebase';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { ClipLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
 
@@ -38,16 +38,47 @@ const OrderDetails = () => {
     setUpdatingStatus(true); // Set updating status state to true
     try {
       const orderRef = doc(db, 'orders', orderId);
-      await updateDoc(orderRef, {
-        status: newStatus,
-      });
-      toast.success('Status updated successfully!');
-      // Optionally, you can fetch order details again to update UI
-      setOrder({ ...order, status: newStatus });
+      // Fetch order document
+      const orderSnapshot = await getDoc(orderRef);
+      if (!orderSnapshot.exists()) {
+        console.error('Order document not found');
+        return;
+      }
+
+      const orderData = orderSnapshot.data();
+      const currentStatus = orderData.status;
+
+      // Only proceed if status is actually changing
+      if (newStatus !== currentStatus) {
+        // Update order status
+        await updateDoc(orderRef, { status: newStatus });
+
+        // Handle inventory adjustment if status is "Refunded"
+        if (newStatus === 'Refunded' && currentStatus !== 'Refunded') {
+          // Retrieve books associated with the order
+          const booksCollection = collection(db, 'books');
+          const booksQuery = query(booksCollection, where('__name__', 'in', orderData.items.map(item => item.bookId)));
+          const booksSnapshot = await getDocs(booksQuery);
+
+          // Update each book's inventory
+          booksSnapshot.forEach(async (bookDoc) => {
+            const bookData = bookDoc.data();
+            const orderedItem = orderData.items.find(item => item.bookId === bookDoc.id);
+            const updatedQuantity = bookData.copies + orderedItem.quantity;
+
+            // Update individual book document
+            const bookRef = doc(booksCollection, bookDoc.id);
+            await updateDoc(bookRef, { copies: updatedQuantity });
+          });
+        }
+
+        toast.success('Status updated successfully!');
+        // Optionally, you can fetch order details again to update UI
+        setOrder({ ...order, status: newStatus });
+      }
     } catch (error) {
       toast.error('Error updating status');
-
-      console.log('Error updating status:', error);
+      console.error('Error updating status:', error);
     }
     setUpdatingStatus(false); // Set updating status state to false after updating
   };
@@ -62,7 +93,7 @@ const OrderDetails = () => {
 
       <div className="mb-4">
         <h3 className="text-xl font-semibold">Order ID: {order.id}</h3>
-        <p className="text-gray-600">Status: {order.status}</p>
+        <p className="text-gray-600">Status: {order.status ?? 'Pending'}</p>
       </div>
 
       <div className="mb-4">
