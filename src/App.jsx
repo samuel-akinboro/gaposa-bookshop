@@ -21,6 +21,7 @@ import EditBook from './pages/EditBook';
 import Checkout from './pages/Checkout'; // Import the Checkout page component
 import OrderManagement from './pages/OrderManagement';
 import UserOrder from './pages/UserOrder';
+import OrderDetails from './pages/OrderDetails';
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const App = () => {
               <Route path="/book/:id" element={<BookDetails />} />
               <Route path="/admin/add-book" element={<AdminRoute><AddBook /></AdminRoute>} />
               <Route path="/admin/orders" element={<AdminRoute><OrderManagement /></AdminRoute>} />
+              <Route path="/admin/orders/:orderId" element={<AdminRoute><OrderDetails /></AdminRoute>} />
               <Route path="/admin/users" element={<AdminRoute><Users /></AdminRoute>} />
               <Route path="/admin/books" element={<AdminRoute><AdminBooks /></AdminRoute>} />
               <Route path="/admin/edit-book/:id" element={<AdminRoute><EditBook /></AdminRoute>} />
