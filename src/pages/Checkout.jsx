@@ -3,15 +3,13 @@ import { useBookshop } from '../store/BookshopContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { PaystackButton } from 'react-paystack';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase'; // Assuming you have Firebase initialized and exported as 'db'
 
 const Checkout = () => {
   const { state, dispatch } = useBookshop();
   const { cart, user } = state; // Accessing user details from state
   const navigate = useNavigate();
-
-  console.log({user})
 
   const [shippingInfo, setShippingInfo] = useState({
     fullName: user?.name || '',
@@ -41,6 +39,14 @@ const Checkout = () => {
       const docRef = await addDoc(collection(db, 'orders'), orderData);
       console.log('Order placed with ID: ', docRef.id);
 
+      // Decrease copies for each book in cart
+      for (const item of cart) {
+        const bookRef = doc(db, 'books', item.id);
+        await updateDoc(bookRef, {
+          copies: item.copies - item.quantity,
+        });
+      }
+
       // Clear cart after successful order placement
       dispatch({ type: 'CLEAR_CART' });
 
@@ -56,7 +62,7 @@ const Checkout = () => {
       console.error('Error adding order: ', error);
       toast.error('Error placing order. Please try again.');
     }
-  }
+  };
 
   const onSuccess = (reference) => {
     // Prepare order data
@@ -68,14 +74,15 @@ const Checkout = () => {
         title: item.title,
         price: item.price,
         quantity: item.quantity,
-        imageUrl: item?.imageUrl
+        imageUrl: item?.imageUrl,
       })),
+      customerName: user?.name,
       totalAmount: cart.reduce((acc, item) => acc + item.price * item.quantity, 0),
       timestamp: serverTimestamp(),
       paymentReference: reference.reference, // Save Paystack reference
     };
 
-    createOrder(orderData)
+    createOrder(orderData);
   };
 
   const onClose = () => {
@@ -86,7 +93,7 @@ const Checkout = () => {
     reference: (new Date()).getTime().toString(),
     email: user?.email || '', // Replace with customer's email
     amount: cart.reduce((acc, item) => acc + item.price * item.quantity, 0) * 100, // Amount in kobo (100 kobo = ₦1)
-    publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY
+    publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY, // Replace with your Paystack public key
   };
 
   return (

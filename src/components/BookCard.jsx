@@ -8,15 +8,22 @@ const BookCard = ({ book }) => {
   const cartItem = state.cart.find(item => item.id === book.id);
 
   const addToCart = () => {
+    if (book.copies === 0) {
+      toast.error('Out of Stock');
+      return;
+    }
+
     if (cartItem && cartItem.quantity >= book.copies) {
       toast.error(`Only ${book.copies} copies available`);
       return;
     }
+
     if (cartItem) {
       dispatch({ type: 'UPDATE_CART_ITEM_QUANTITY', payload: { id: book.id, quantity: cartItem.quantity + 1 } });
     } else {
       dispatch({ type: 'ADD_TO_CART', payload: { ...book, id: book.id, quantity: 1 } });
     }
+
     toast.success(`${book.title} added to cart`);
   };
 
@@ -38,7 +45,7 @@ const BookCard = ({ book }) => {
       <p>{book.author}</p>
       <p>₦{book.price}</p>
       <p>Department: {book.department}</p>
-      <p>Copies: {book.copies}</p>
+      <p>Copies: {book.copies === 0 ? 'Out of Stock' : book.copies}</p>
       {cartItem ? (
         <div className="flex items-center justify-between mt-2">
           <button
@@ -52,7 +59,7 @@ const BookCard = ({ book }) => {
           <button
             onClick={addToCart}
             className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
-            disabled={cartItem.quantity >= book.copies}
+            disabled={cartItem.quantity >= book.copies || book.copies === 0}
           >
             +
           </button>
@@ -60,9 +67,10 @@ const BookCard = ({ book }) => {
       ) : (
         <button
           onClick={addToCart}
-          className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 mt-2 w-full"
+          className={`bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 mt-2 w-full ${book.copies === 0 && 'opacity-50 cursor-not-allowed'}`}
+          disabled={book.copies === 0}
         >
-          Add to Cart
+          {book.copies === 0 ? 'Out of Stock' : 'Add to Cart'}
         </button>
       )}
     </div>
