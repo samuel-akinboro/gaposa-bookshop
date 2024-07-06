@@ -68,6 +68,7 @@ const Checkout = () => {
         title: item.title,
         price: item.price,
         quantity: item.quantity,
+        imageUrl: item?.imageUrl
       })),
       totalAmount: cart.reduce((acc, item) => acc + item.price * item.quantity, 0),
       timestamp: serverTimestamp(),

@@ -14,9 +14,14 @@ const OrderItem = ({ order }) => {
         {items.map((item) => (
           <li key={item.bookId} className="py-2">
             <div className="flex justify-between items-center">
-              <div>
-                <h4 className="font-semibold">{item.title}</h4>
-                <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+              <div className="flex items-center">
+                {item.imageUrl && (
+                  <img src={item.imageUrl} alt={item.title} className="h-16 w-16 object-cover rounded-lg mr-4" />
+                )}
+                <div>
+                  <h4 className="font-semibold">{item.title}</h4>
+                  <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+                </div>
               </div>
               <p className="text-lg font-semibold">₦{item.price.toFixed(2)}</p>
             </div>
