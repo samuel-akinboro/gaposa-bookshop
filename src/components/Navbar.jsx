@@ -1,9 +1,11 @@
+// src/components/Navbar.jsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useBookshop } from '../store/BookshopContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { toast } from 'react-toastify';
+import { FaShoppingCart, FaSignOutAlt } from 'react-icons/fa';
 
 const Navbar = () => {
   const { state, dispatch } = useBookshop();
@@ -28,13 +30,18 @@ const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between">
         <Link to="/" className="text-white text-xl font-bold">GAPOSA Bookshop</Link>
         <div>
-          <ul className="flex space-x-4">
+          <ul className="flex space-x-4 items-center">
             {state.user ? (
               <>
                 {state.user.role !== 'admin' && (
                   <>
                     <li><Link to="/catalog" className="text-white hover:text-gray-300">Book Catalog</Link></li>
-                    <li><Link to="/cart" className="text-white hover:text-gray-300">Cart</Link></li>
+                    <li>
+                      <Link to="/cart" className="text-white hover:text-gray-300 flex items-center">
+                        <FaShoppingCart />
+                        <span className="ml-1">Cart ({state.cart.length})</span>
+                      </Link>
+                    </li>
                   </>
                 )}
                 {state.user.role === 'admin' && (
@@ -45,7 +52,12 @@ const Navbar = () => {
                     <li><Link to="/admin/books" className="text-white hover:text-gray-300">All Books</Link></li>
                   </>
                 )}
-                <li><button onClick={handleLogout} className="text-white hover:text-gray-300">Logout</button></li>
+                <li>
+                  <button onClick={handleLogout} className="text-white hover:text-gray-300 flex items-center">
+                    <FaSignOutAlt />
+                    <span className="ml-1">Logout</span>
+                  </button>
+                </li>
               </>
             ) : (
               <>

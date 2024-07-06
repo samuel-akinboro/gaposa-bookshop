@@ -1,13 +1,13 @@
+// src/pages/Cart.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useBookshop } from '../store/BookshopContext';
+import CartCard from '../components/CartCard';
 
 const Cart = () => {
-  // Dummy data for demonstration
-  const cartItems = [
-    { id: 1, title: 'Book 1', price: 19.99, quantity: 2 },
-    { id: 2, title: 'Book 2', price: 29.99, quantity: 1 },
-    { id: 3, title: 'Book 3', price: 24.99, quantity: 3 },
-  ];
+  const { state } = useBookshop();
+
+  const cartItems = state.cart;
 
   // Calculate total price
   const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
@@ -22,11 +22,7 @@ const Cart = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="col-span-1">
             {cartItems.map(item => (
-              <div key={item.id} className="border p-4 mb-4">
-                <h3 className="text-lg font-semibold">{item.title}</h3>
-                <p>Price: ${item.price}</p>
-                <p>Quantity: {item.quantity}</p>
-              </div>
+              <CartCard key={item.id} item={item} />
             ))}
           </div>
 
@@ -34,7 +30,7 @@ const Cart = () => {
             <div className="border p-4">
               <h3 className="text-lg font-semibold">Order Summary</h3>
               <p>Total Items: {cartItems.length}</p>
-              <p>Total Price: ${totalPrice.toFixed(2)}</p>
+              <p>Total Price: ₦{totalPrice.toFixed(2)}</p>
               <Link to="/checkout" className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 mt-4 inline-block rounded">
                 Proceed to Checkout
               </Link>

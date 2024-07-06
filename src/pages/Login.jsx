@@ -38,7 +38,7 @@ const Login = () => {
       if (userDoc.exists()) {
         dispatch({ type: 'SET_USER', payload: userDoc.data() });
         toast.success(`Welcome onboard ${userDoc.data()?.name}`);
-        navigate('/catalog');
+        userDoc.data()?.role === 'admin' ? navigate('/admin/books') : navigate('/catalog');
       } else {
         toast.error('No such user found');
       }
