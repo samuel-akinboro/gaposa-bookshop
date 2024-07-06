@@ -44,6 +44,11 @@ const reducer = (state, action) => {
         ...state,
         cart: state.cart.filter((item) => item.id !== action.payload),
       };
+    case 'CLEAR_CART':
+      return {
+        ...state,
+        cart: [],
+      };
     case 'SET_BOOKS':
       return { ...state, books: action.payload };
     case 'SET_ORDERS':

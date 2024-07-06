@@ -36,6 +36,7 @@ const Navbar = () => {
                 {state.user.role !== 'admin' && (
                   <>
                     <li><Link to="/catalog" className="text-white hover:text-gray-300">Book Catalog</Link></li>
+                    <li><Link to="/orders" className="text-white hover:text-gray-300">My orders</Link></li>
                     <li>
                       <Link to="/cart" className="text-white hover:text-gray-300 flex items-center">
                         <FaShoppingCart />

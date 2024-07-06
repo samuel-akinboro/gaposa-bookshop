@@ -36,7 +36,7 @@ const Login = () => {
 
       const userDoc = await getDoc(doc(db, 'users', user.uid));
       if (userDoc.exists()) {
-        dispatch({ type: 'SET_USER', payload: userDoc.data() });
+        dispatch({ type: 'SET_USER', payload: {...userDoc.data(), uid: user?.uid} });
         toast.success(`Welcome onboard ${userDoc.data()?.name}`);
         userDoc.data()?.role === 'admin' ? navigate('/admin/books') : navigate('/catalog');
       } else {

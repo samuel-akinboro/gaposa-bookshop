@@ -58,7 +58,7 @@ const Signup = () => {
 
       await setDoc(doc(db, 'users', user.uid), userData);
 
-      dispatch({ type: 'SET_USER', payload: userData });
+      dispatch({ type: 'SET_USER', payload: {...userData, uid: user?.uid} });
       toast.success(`Welcome onboard ${formData?.name}`);
       setFormData({
         name: '',

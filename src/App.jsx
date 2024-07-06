@@ -10,7 +10,6 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import BookDetails from './pages/BookDetails';
 import AddBook from './pages/AddBook';
-import Orders from './pages/Orders';
 import Users from './pages/Users';
 import { BookshopProvider } from './store/BookshopContext';
 import Landing from './pages/Landing';
@@ -19,12 +18,15 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminBooks from './pages/AdminBooks';
 import EditBook from './pages/EditBook';
+import Checkout from './pages/Checkout'; // Import the Checkout page component
+import OrderManagement from './pages/OrderManagement';
+import UserOrder from './pages/UserOrder';
 
 const App = () => {
   return (
     <BookshopProvider>
       <Router>
-        <ToastContainer />
+        <ToastContainer autoClose={1000} />
         <div className="flex flex-col min-h-screen">
           <Navbar />
           <main className="flex-grow">
@@ -32,14 +34,16 @@ const App = () => {
               <Route path="/" element={<Landing />} />
               <Route path="/catalog" element={<Catalog />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} /> {/* Add this route */}
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/book/:id" element={<BookDetails />} />
               <Route path="/admin/add-book" element={<AdminRoute><AddBook /></AdminRoute>} />
-              <Route path="/admin/orders" element={<AdminRoute><Orders /></AdminRoute>} />
+              <Route path="/admin/orders" element={<AdminRoute><OrderManagement /></AdminRoute>} />
               <Route path="/admin/users" element={<AdminRoute><Users /></AdminRoute>} />
               <Route path="/admin/books" element={<AdminRoute><AdminBooks /></AdminRoute>} />
               <Route path="/admin/edit-book/:id" element={<AdminRoute><EditBook /></AdminRoute>} />
+              <Route path="/orders" element={<UserOrder />} /> 
             </Routes>
           </main>
           <Footer />
